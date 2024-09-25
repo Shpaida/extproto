@@ -1,0 +1,57 @@
+{
+    "name": "extproto",
+    "version": "1.0.0",
+    "description": "A simple CAP project.",
+    "repository": "<Add your repository here>",
+    "license": "UNLICENSED",
+    "private": true,
+    "dependencies": {
+        "@sap-cloud-sdk/http-client": "^3.16.0",
+        "@sap/cds": "^8.2.2",
+        "@sap/xssec": "^4",
+        "express": "^4"
+    },
+    "devDependencies": {
+        "@cap-js/cds-types": "^0.6",
+        "@cap-js/sqlite": "^1",
+        "@sap/cds-dk": ">=7",
+        "@sap/ux-specification": "^1.124.1",
+        "rimraf": "^5.0.5"
+    },
+    "scripts": {
+        "start": "cds-serve",
+        "watch-employees": "cds watch --open employees/webapp/index.html?sap-ui-xx-viewCache=false",
+        "undeploy": "cf undeploy extproto --delete-services --delete-service-keys --delete-service-brokers",
+        "build": "rimraf resources mta_archives && mbt build --mtar archive",
+        "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
+    },
+    "cds": {
+        "requires": {
+            "ECPersonalInformation": {
+                "kind": "odata-v2",
+                "model": "srv/external/ECPersonalInformation",
+                "[hybrid]": {
+                    "credentials": {
+                        "destination": "sfsf",
+                        "path": "/odata/v2"
+                    }
+                },
+                "[production]": {
+                    "credentials": {
+                        "destination": "sfsf",
+                        "path": "/odata/v2"
+                    }
+                }
+            },
+            "[hybrid]": {
+                "auth": "xsuaa"
+            },
+            "[production]": {
+                "auth": "xsuaa"
+            }
+        }
+    },
+    "sapux": [
+        "app/employees"
+    ]
+}
